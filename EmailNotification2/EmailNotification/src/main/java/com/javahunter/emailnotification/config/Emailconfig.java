@@ -31,7 +31,7 @@ public class Emailconfig {
             javaMailSender.send(mailMessage);
             log.info("Mail sent successfully");
         }catch (MailException e){
-            log.debug("Error occurrec while sending email");
+            log.debug("Mail cannot be sent");
         }
     }
 }
