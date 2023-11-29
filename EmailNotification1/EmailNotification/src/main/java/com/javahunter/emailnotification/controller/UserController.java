@@ -52,8 +52,8 @@ public class UserController {
                 .build(),HttpStatus.OK);
     }
 
-    @DeleteMapping("/update")
-    public ResponseEntity<ResponseDto> deleteUser(String email){
+    @DeleteMapping("/delete/{email}")
+    public ResponseEntity<ResponseDto> deleteUser(@PathVariable String email){
         boolean isDeleted = userService.deleteUser(email);
         if (!isDeleted)
             return new ResponseEntity<>(ResponseDto.builder()

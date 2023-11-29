@@ -1,4 +1,4 @@
-package com.javahunter.emailnotification.config;
+package com.javahunter.emailnotification.service;
 
 import com.javahunter.emailnotification.payload.EmailDetails;
 import lombok.extern.slf4j.Slf4j;
@@ -7,20 +7,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+@Service
 @Slf4j
-@Component
-public class Emailconfig {
-
+public class EmailServiceImpl {
     @Autowired
     private JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String emailSender;
 
-    @Async
     public void sendEmail(EmailDetails emailDetails){
         try {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -31,7 +28,7 @@ public class Emailconfig {
             javaMailSender.send(mailMessage);
             log.info("Mail sent successfully");
         }catch (MailException e){
-            log.debug("Mail cannot be sent");
+            log.debug("Failure occurred while sending email");
         }
     }
 }
