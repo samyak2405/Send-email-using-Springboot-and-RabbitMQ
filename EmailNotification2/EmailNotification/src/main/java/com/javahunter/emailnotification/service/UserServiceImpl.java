@@ -1,7 +1,6 @@
 package com.javahunter.emailnotification.service;
 
-import com.javahunter.emailnotification.config.Emailconfig;
-import com.javahunter.emailnotification.constants.ExceptionConstants;
+import com.javahunter.emailnotification.constants.UserConstants;
 import com.javahunter.emailnotification.entity.User;
 import com.javahunter.emailnotification.exception.ResourceNotFoundException;
 import com.javahunter.emailnotification.exception.UserAlreadyExistsException;
@@ -26,13 +25,13 @@ public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
 
     @Autowired
-    private Emailconfig emailconfig;
+    private EmailServiceImpl emailService;
     @Override
     public void registerUser(RequestDto requestDto) {
         if(userRepository.existsByEmail(requestDto.getEmail()))
-            throw new UserAlreadyExistsException(ExceptionConstants.USER_ALREADY_EXISTS);
+            throw new UserAlreadyExistsException(UserConstants.USER_ALREADY_EXISTS);
         User user = UserMapper.mapToUser(new User(),requestDto);
-        emailconfig.sendEmail(EmailDetails.builder()
+        emailService.sendEmail(EmailDetails.builder()
                         .messageBody("Registration Successful with mail id: "+requestDto.getEmail())
                         .recipient(requestDto.getEmail())
                         .subject("REGISTRATION SUCCESS")
@@ -43,7 +42,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDetailsDto getUserByEmail(String email) {
         if(!userRepository.existsByEmail(email))
-            throw new ResourceNotFoundException(ExceptionConstants.USER_NOT_FOUND);
+            throw new ResourceNotFoundException(UserConstants.USER_NOT_FOUND);
         User user = userRepository.findByEmail(email);
         return UserMapper.mapToUserDetails(new UserDetailsDto(),user);
     }
@@ -52,7 +51,7 @@ public class UserServiceImpl implements UserService{
     public List<UserDetailsDto> getAllUsers() {
         List<User> users = userRepository.findAll();
         if(users.isEmpty())
-            throw new ResourceNotFoundException(ExceptionConstants.USER_NOT_FOUND);
+            throw new ResourceNotFoundException(UserConstants.USER_NOT_FOUND);
         List<UserDetailsDto> userDetailsDtos = new ArrayList<>();
         users.forEach(user -> userDetailsDtos.add(UserMapper.mapToUserDetails(new UserDetailsDto(),user)));
         return userDetailsDtos;
@@ -62,7 +61,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public boolean updateUser(RequestDto requestDto) {
         if(!userRepository.existsByEmail(requestDto.getEmail()))
-            throw new ResourceNotFoundException(ExceptionConstants.USER_NOT_FOUND);
+            throw new ResourceNotFoundException(UserConstants.USER_NOT_FOUND);
         User user = userRepository.findByEmail(requestDto.getEmail());
         User updatedUser = UserMapper.mapToUser(user,requestDto);
         userRepository.save(updatedUser);
@@ -73,7 +72,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public boolean deleteUser(String email) {
         if(!userRepository.existsByEmail(email))
-            throw new ResourceNotFoundException(ExceptionConstants.USER_NOT_FOUND);
+            throw new ResourceNotFoundException(UserConstants.USER_NOT_FOUND);
         userRepository.deleteByEmail(email);
         return true;
     }
