@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/userdb?useSSL=false
+    username: root
+    password: 12345678
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+      properties:
+        hibernate:
+          format_sql: true
+        naming:
+          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: samyakmoon855@gmail.com
+    password: eehpupgxckvifopp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+server:
+  port: 8080
+
+rabbitmq:
+  queue:
+    email:
+      name: email_queue
+  exchange:
+    email:
+      name: email_exchange
+  binding:
+    email:
+      name: email_routing_key
+
+logging:
+  level:
+    org:
+      springframework:
+        amqp: DEBUG
